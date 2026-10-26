@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Composite Functions — 30 MCQ Quiz</title>
+
+<!-- MathJax config: enable \(...\) inline and \[...\] display math -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath:  [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      processEscapes: true
+    },
+    svg: { fontCache: 'global' },
+    options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #1e293b;
+    --panel-2: #273449;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent-2: #818cf8;
+    --good: #22c55e;
+    --bad: #ef4444;
+    --warn: #f59e0b;
+    --border: #334155;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(135deg, #0b1224 0%, #0f172a 100%);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  .wrap {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 28px 18px 80px;
+  }
+  header.app {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  }
+  header.app h1 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  header.app p.sub { margin: 0; color: var(--muted); font-size: 14px; }
+  .stats {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .chip {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all .15s ease;
+    user-select: none;
+  }
+  .chip.active {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #0b1224;
+    border-color: transparent;
+    font-weight: 600;
+  }
+  .chip:hover { transform: translateY(-1px); }
+  .progress-bar {
+    margin-top: 14px;
+    height: 8px;
+    background: var(--panel-2);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-bar > div {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width .3s ease;
+  }
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 22px 0 12px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .toolbar .legend {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  button.btn {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #0b1224;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform .12s ease, opacity .15s ease;
+  }
+  button.btn:hover { transform: translateY(-1px); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  button.btn.ghost {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .q-list { display: flex; flex-direction: column; gap: 14px; }
+  .q {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .q.answered.correct { border-color: var(--good); box-shadow: 0 0 0 1px var(--good) inset; }
+  .q.answered.wrong   { border-color: var(--bad);  box-shadow: 0 0 0 1px var(--bad)  inset; }
+  .q-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .q-head .q-num {
+    font-size: 13px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .q-head .topic {
+    background: var(--panel-2);
+    color: var(--accent);
+    border: 1px solid var(--border);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .q-text {
+    font-size: 15px;
+    margin: 0 0 14px;
+    color: var(--text);
+  }
+  /* MathJax inherits color from parent */
+  mjx-container { color: inherit; }
+  .opts { display: grid; gap: 8px; }
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .12s ease, border-color .12s ease;
+  }
+  .opt:hover { background: #2f3d57; }
+  .opt .letter {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .opt .txt { font-size: 14px; }
+  .opt.selected { border-color: var(--accent); background: #2a3a5e; }
+  .opt.selected .letter { background: var(--accent); color: #0b1224; }
+  .opt.correct { border-color: var(--good); background: rgba(34,197,94,.12); }
+  .opt.correct .letter { background: var(--good); color: #06230f; }
+  .opt.wrong   { border-color: var(--bad);  background: rgba(239,68,68,.12); }
+  .opt.wrong .letter   { background: var(--bad);  color: #2a0707; }
+  .opt.disabled { cursor: default; }
+  .opt.disabled:hover { background: var(--panel-2); }
+  .explanation {
+    margin-top: 12px;
+    background: var(--bg);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--muted);
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--accent); }
+  .score-bar {
+    position: sticky;
+    bottom: 0;
+    margin-top: 24px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    box-shadow: 0 -8px 24px rgba(0,0,0,.25);
+  }
+  .score-bar .left { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  .score-bar .label { color: var(--muted); font-size: 13px; }
+  .score-bar .value { font-size: 18px; font-weight: 700; color: var(--text); }
+  .score-bar .value.good { color: var(--good); }
+  .score-bar .value.mid  { color: var(--warn); }
+  .score-bar .value.bad  { color: var(--bad); }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  footer.app {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 18px;
+  }
+  @media (max-width: 600px) {
+    header.app h1 { font-size: 20px; }
+    .q { padding: 14px; }
+    .opt { padding: 9px 11px; }
+    .score-bar { flex-direction: column; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="app">
+      <h1>Composite Functions — 30 MCQ Quiz</h1>
+      <p class="sub">Topics: composite at a point · domain of a composite · derivative of a composite · explicit form. No logarithmic or exponential functions.</p>
+
+      <div class="stats">
+        <span class="chip active" data-filter="all">All (30)</span>
+        <span class="chip" data-filter="point">At a point (7)</span>
+        <span class="chip" data-filter="domain">Domain (8)</span>
+        <span class="chip" data-filter="derivative">Derivative (8)</span>
+        <span class="chip" data-filter="explicit">Explicit form (7)</span>
+      </div>
+
+      <div class="progress-bar"><div id="progressFill"></div></div>
+    </header>
+
+    <div class="toolbar">
+      <div class="legend">Select an answer for each question, then click <strong>Check answers</strong>. Explanations appear inline.</div>
+      <div class="actions">
+        <button class="btn ghost" id="resetBtn">Reset</button>
+        <button class="btn" id="checkBtn">Check answers</button>
+      </div>
+    </div>
+
+    <div class="q-list" id="qList"></div>
+
+    <div class="score-bar">
+      <div class="left">
+        <div>
+          <div class="label">Answered</div>
+          <div class="value" id="answeredCount">0 / 30</div>
+        </div>
+        <div>
+          <div class="label">Score</div>
+          <div class="value" id="scoreValue">—</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" id="resetBtn2">Reset quiz</button>
+      </div>
+    </div>
+
+    <footer class="app">Educational quiz · Composite functions · Math rendered with MathJax · No log/exp content</footer>
+  </div>
+
+<script>
+/* ====== Question bank ======
+   Math is written in LaTeX syntax using \( ... \) for inline math.
+   MathJax (loaded in <head>) renders these into proper typeset math.
+   Note: backslashes are doubled (\\) because they live inside JS string literals.
+*/
+const QUESTIONS = [
+  /* ---------- Composite function at a point (7) ---------- */
+  {
+    id: 1, topic: "point",
+    q: 'If \\(f(x) = 2x + 1\\) and \\(g(x) = x^2\\), find \\((f \\circ g)(3)\\).',
+    options: ["19", "18", "7", "12"],
+    answer: 0,
+    explain: '\\(g(3) = 3^2 = 9\\), then \\(f(9) = 2(9)+1 = 19\\).'
+  },
+  {
+    id: 2, topic: "point",
+    q: 'If \\(f(x) = x^2 - 1\\) and \\(g(x) = 3x + 2\\), find \\((g \\circ f)(2)\\).',
+    options: ["11", "8", "5", "14"],
+    answer: 0,
+    explain: '\\(f(2) = 2^2 - 1 = 3\\), then \\(g(3) = 3(3)+2 = 11\\).'
+  },
+  {
+    id: 3, topic: "point",
+    q: 'If \\(f(x) = \\sqrt{x + 1}\\) and \\(g(x) = 4\\) (constant), find \\((f \\circ g)(0)\\).',
+    options: ["\\(\\sqrt{5}\\)", "1", "2", "\\(\\sqrt{2}\\)"],
+    answer: 0,
+    explain: '\\(g(0) = 4\\), then \\(f(4) = \\sqrt{4+1} = \\sqrt{5}\\).'
+  },
+  {
+    id: 4, topic: "point",
+    q: 'If \\(f(x) = \\dfrac{1}{x - 2}\\) and \\(g(x) = x + 1\\), find \\((f \\circ g)(5)\\).',
+    options: ["\\(\\dfrac{1}{4}\\)", "\\(\\dfrac{1}{3}\\)", "\\(\\dfrac{1}{5}\\)", "\\(\\dfrac{1}{6}\\)"],
+    answer: 0,
+    explain: '\\(g(5) = 6\\), then \\(f(6) = \\dfrac{1}{6-2} = \\dfrac{1}{4}\\).'
+  },
+  {
+    id: 5, topic: "point",
+    q: 'If \\(f(x) = 3x - 7\\) and \\(g(x) = -x + 4\\), find \\((f \\circ g)(1)\\).',
+    options: ["2", "-2", "5", "-5"],
+    answer: 0,
+    explain: '\\(g(1) = -1+4 = 3\\), then \\(f(3) = 3(3)-7 = 2\\).'
+  },
+  {
+    id: 6, topic: "point",
+    q: 'If \\(f(x) = x^2 + x\\) and \\(g(x) = x - 3\\), find \\((g \\circ f)(1)\\).',
+    options: ["-1", "-2", "1", "0"],
+    answer: 0,
+    explain: '\\(f(1) = 1+1 = 2\\), then \\(g(2) = 2-3 = -1\\).'
+  },
+  {
+    id: 7, topic: "point",
+    q: 'If \\(f(x) = \\dfrac{x + 2}{3}\\) and \\(g(x) = 6x - 1\\), find \\((f \\circ g)(2)\\).',
+    options: ["\\(\\dfrac{13}{3}\\)", "4", "13", "3"],
+    answer: 0,
+    explain: '\\(g(2) = 12-1 = 11\\), then \\(f(11) = \\dfrac{11+2}{3} = \\dfrac{13}{3}\\).'
+  },
+
+  /* ---------- Domain of a composite function (8) ---------- */
+  {
+    id: 8, topic: "domain",
+    q: 'If \\(f(x) = \\sqrt{x}\\) and \\(g(x) = x - 3\\), find the domain of \\(f \\circ g\\).',
+    options: ["\\([3, \\infty)\\)", "\\([0, \\infty)\\)", "\\((-\\infty, 3]\\)", "\\([0, 3]\\)"],
+    answer: 0,
+    explain: 'Need \\(g(x) \\geq 0 \\Rightarrow x - 3 \\geq 0 \\Rightarrow x \\geq 3\\). Domain \\(= [3, \\infty)\\).'
+  },
+  {
+    id: 9, topic: "domain",
+    q: 'If \\(f(x) = \\dfrac{1}{x}\\) and \\(g(x) = x - 4\\), find the domain of \\(f \\circ g\\).',
+    options: ["\\(\\mathbb{R} \\setminus \\{4\\}\\)", "\\(\\mathbb{R} \\setminus \\{0\\}\\)", "\\((4, \\infty)\\)", "\\((-\\infty, 4)\\)"],
+    answer: 0,
+    explain: 'Need \\(g(x) \\neq 0 \\Rightarrow x - 4 \\neq 0 \\Rightarrow x \\neq 4\\). Domain \\(= \\mathbb{R} \\setminus \\{4\\}\\).'
+  },
+  {
+    id: 10, topic: "domain",
+    q: 'If \\(f(x) = \\sqrt{x + 1}\\) and \\(g(x) = x^2\\), find the domain of \\(f \\circ g\\).',
+    options: ["\\(\\mathbb{R}\\) (all real numbers)", "\\([-1, \\infty)\\)", "\\([0, \\infty)\\)", "\\((1, \\infty)\\)"],
+    answer: 0,
+    explain: 'Need \\(g(x)+1 \\geq 0 \\Rightarrow x^2 + 1 \\geq 0\\), which is always true. Domain \\(= \\mathbb{R}\\).'
+  },
+  {
+    id: 11, topic: "domain",
+    q: 'If \\(f(x) = \\dfrac{1}{x + 2}\\) and \\(g(x) = \\sqrt{x}\\), find the domain of \\(f \\circ g\\).',
+    options: ["\\([0, \\infty)\\)", "\\(\\mathbb{R}\\)", "\\(\\mathbb{R} \\setminus \\{-2\\}\\)", "\\((-\\infty, 0]\\)"],
+    answer: 0,
+    explain: 'Need \\(x \\geq 0\\) (for \\(\\sqrt{x}\\)). Also \\(\\sqrt{x} \\neq -2\\), but \\(\\sqrt{x} \\geq 0 > -2\\) always, so no extra restriction. Domain \\(= [0, \\infty)\\).'
+  },
+  {
+    id: 12, topic: "domain",
+    q: 'If \\(f(x) = \\sqrt{x - 2}\\) and \\(g(x) = x + 1\\), find the domain of \\(f \\circ g\\).',
+    options: ["\\([1, \\infty)\\)", "\\([2, \\infty)\\)", "\\([-1, \\infty)\\)", "\\([0, \\infty)\\)"],
+    answer: 0,
+    explain: 'Need \\(g(x) - 2 \\geq 0 \\Rightarrow (x+1) - 2 \\geq 0 \\Rightarrow x \\geq 1\\). Domain \\(= [1, \\infty)\\).'
+  },
+  {
+    id: 13, topic: "domain",
+    q: 'If \\(f(x) = \\dfrac{1}{x - 1}\\) and \\(g(x) = x^2 + 1\\), find the domain of \\(f \\circ g\\).',
+    options: ["\\(\\mathbb{R} \\setminus \\{0\\}\\)", "\\(\\mathbb{R} \\setminus \\{1\\}\\)", "\\(\\mathbb{R}\\)", "\\(\\mathbb{R} \\setminus \\{-1, 1\\}\\)"],
+    answer: 0,
+    explain: 'Need \\(g(x) \\neq 1 \\Rightarrow x^2 + 1 \\neq 1 \\Rightarrow x^2 \\neq 0 \\Rightarrow x \\neq 0\\). Domain \\(= \\mathbb{R} \\setminus \\{0\\}\\).'
+  },
+  {
+    id: 14, topic: "domain",
+    q: 'If \\(f(x) = \\sqrt{4 - x}\\) and \\(g(x) = x + 1\\), find the domain of \\(f \\circ g\\).',
+    options: ["\\((-\\infty, 3]\\)", "\\((-\\infty, 4]\\)", "\\([3, \\infty)\\)", "\\([4, \\infty)\\)"],
+    answer: 0,
+    explain: 'Need \\(4 - g(x) \\geq 0 \\Rightarrow 4 - (x+1) \\geq 0 \\Rightarrow x \\leq 3\\). Domain \\(= (-\\infty, 3]\\).'
+  },
+  {
+    id: 15, topic: "domain",
+    q: 'If \\(f(x) = \\dfrac{1}{\\sqrt{x + 3}}\\) and \\(g(x) = x - 1\\), find the domain of \\(f \\circ g\\).',
+    options: ["\\((-2, \\infty)\\)", "\\([-2, \\infty)\\)", "\\(\\mathbb{R} \\setminus \\{-3\\}\\)", "\\([-3, \\infty)\\)"],
+    answer: 0,
+    explain: 'Need \\(g(x) + 3 > 0 \\Rightarrow (x-1) + 3 > 0 \\Rightarrow x > -2\\) (strict, since the denominator must be non-zero). Domain \\(= (-2, \\infty)\\).'
+  },
+
+  /* ---------- Derivative of a composite function (8) ---------- */
+  {
+    id: 16, topic: "derivative",
+    q: 'Find \\(\\dfrac{d}{dx}\\left[ (3x + 1)^5 \\right]\\).',
+    options: ["\\(15(3x + 1)^4\\)", "\\(5(3x + 1)^4\\)", "\\(3(3x + 1)^4\\)", "\\(15(3x + 1)^3\\)"],
+    answer: 0,
+    explain: 'Chain rule: \\(5(3x+1)^4 \\cdot \\dfrac{d}{dx}(3x+1) = 5(3x+1)^4 \\cdot 3 = 15(3x+1)^4\\).'
+  },
+  {
+    id: 17, topic: "derivative",
+    q: 'Find \\(\\dfrac{d}{dx}\\left[ \\sqrt{2x^2 + 1} \\right]\\).',
+    options: ["\\(\\dfrac{2x}{\\sqrt{2x^2 + 1}}\\)", "\\(\\dfrac{x}{\\sqrt{2x^2 + 1}}\\)", "\\(4x\\sqrt{2x^2 + 1}\\)", "\\(\\dfrac{2x}{2x^2 + 1}\\)"],
+    answer: 0,
+    explain: 'Chain rule: \\(\\dfrac{1}{2\\sqrt{2x^2+1}} \\cdot 4x = \\dfrac{2x}{\\sqrt{2x^2+1}}\\).'
+  },
+  {
+    id: 18, topic: "derivative",
+    q: 'Find \\(\\dfrac{d}{dx}\\left[ (x^3 - 2x)^7 \\right]\\).',
+    options: [
+      "\\(7(3x^2 - 2)(x^3 - 2x)^6\\)",
+      "\\(7(x^3 - 2x)^6\\)",
+      "\\((3x^2 - 2)(x^3 - 2x)^6\\)",
+      "\\(7(3x^2 - 2)(x^3 - 2x)^8\\)"
+    ],
+    answer: 0,
+    explain: 'Outer derivative \\(7(x^3-2x)^6\\) times inner derivative \\((3x^2-2)\\).'
+  },
+  {
+    id: 19, topic: "derivative",
+    q: 'Find \\(\\dfrac{d}{dx}\\left[ \\dfrac{1}{(5x + 2)^3} \\right]\\).',
+    options: [
+      "\\(-\\dfrac{15}{(5x + 2)^4}\\)",
+      "\\(-\\dfrac{3}{(5x + 2)^4}\\)",
+      "\\(\\dfrac{15}{(5x + 2)^4}\\)",
+      "\\(-\\dfrac{15}{(5x + 2)^3}\\)"
+    ],
+    answer: 0,
+    explain: 'Rewrite as \\((5x+2)^{-3}\\). Derivative \\(= -3(5x+2)^{-4} \\cdot 5 = -\\dfrac{15}{(5x+2)^4}\\).'
+  },
+  {
+    id: 20, topic: "derivative",
+    q: 'Find \\(\\dfrac{d}{dx}\\left[ (2x - 3)^2 (3x + 1)^3 \\right]\\).',
+    options: [
+      "\\(4(2x - 3)(3x + 1)^3 + 9(2x - 3)^2(3x + 1)^2\\)",
+      "\\(4(3x + 1)^3 + 9(2x - 3)^2\\)",
+      "\\(12(2x - 3)(3x + 1)^2\\)",
+      "\\(9(2x - 3)(3x + 1)^2\\)"
+    ],
+    answer: 0,
+    explain: 'Product rule + chain rule. Let \\(u = (2x-3)^2\\) and \\(v = (3x+1)^3\\). Then \\(u\' = 4(2x-3)\\) and \\(v\' = 9(3x+1)^2\\). \\(u\'v + uv\'\\) gives the first option.'
+  },
+  {
+    id: 21, topic: "derivative",
+    q: 'Find \\(\\dfrac{d}{dx}\\left[ \\dfrac{(x^2 + 1)^3}{4} \\right]\\).',
+    options: [
+      "\\(\\dfrac{3x}{2}(x^2 + 1)^2\\)",
+      "\\(\\dfrac{3}{2}(x^2 + 1)^2\\)",
+      "\\(6x(x^2 + 1)^2\\)",
+      "\\(\\dfrac{3x(x^2 + 1)^2}{4}\\)"
+    ],
+    answer: 0,
+    explain: '\\(\\dfrac{1}{4} \\cdot 3(x^2+1)^2 \\cdot 2x = \\dfrac{3x}{2}(x^2+1)^2\\).'
+  },
+  {
+    id: 22, topic: "derivative",
+    q: 'Find \\(\\dfrac{d}{dx}\\left[ \\sqrt{5 - 2x} \\right]\\).',
+    options: [
+      "\\(-\\dfrac{1}{\\sqrt{5 - 2x}}\\)",
+      "\\(\\dfrac{1}{\\sqrt{5 - 2x}}\\)",
+      "\\(-\\dfrac{2}{\\sqrt{5 - 2x}}\\)",
+      "\\(\\dfrac{1}{2\\sqrt{5 - 2x}}\\)"
+    ],
+    answer: 0,
+    explain: 'Chain rule: \\(\\dfrac{1}{2\\sqrt{5-2x}} \\cdot (-2) = -\\dfrac{1}{\\sqrt{5-2x}}\\).'
+  },
+  {
+    id: 23, topic: "derivative",
+    q: 'Find \\(\\dfrac{d}{dx}\\left[ (4x - 1)^3 \\right]\\) at \\(x = 1\\).',
+    options: ["108", "36", "12", "27"],
+    answer: 0,
+    explain: 'Derivative \\(= 3(4x-1)^2 \\cdot 4 = 12(4x-1)^2\\). At \\(x=1\\): \\(12(3)^2 = 108\\).'
+  },
+
+  /* ---------- Explicit form of a composite function (7) ---------- */
+  {
+    id: 24, topic: "explicit",
+    q: 'If \\(f(x) = x^2 + 1\\) and \\(g(x) = 2x - 3\\), find the explicit form of \\(f \\circ g\\).',
+    options: ["\\(4x^2 - 12x + 10\\)", "\\(2x^2 - 1\\)", "\\(4x^2 + 2x - 2\\)", "\\(2x^2 - 6x + 4\\)"],
+    answer: 0,
+    explain: '\\(f(g(x)) = (2x-3)^2 + 1 = 4x^2 - 12x + 9 + 1 = 4x^2 - 12x + 10\\).'
+  },
+  {
+    id: 25, topic: "explicit",
+    q: 'If \\(f(x) = \\sqrt{x}\\) and \\(g(x) = x + 5\\), find the explicit form of \\(f \\circ g\\).',
+    options: ["\\(\\sqrt{x + 5}\\)", "\\(\\sqrt{x} + 5\\)", "\\(x + \\sqrt{5}\\)", "\\(\\sqrt{x} + \\sqrt{5}\\)"],
+    answer: 0,
+    explain: '\\(f(g(x)) = \\sqrt{g(x)} = \\sqrt{x + 5}\\).'
+  },
+  {
+    id: 26, topic: "explicit",
+    q: 'If \\(f(x) = \\dfrac{1}{x - 2}\\) and \\(g(x) = x^2\\), find the explicit form of \\(f \\circ g\\).',
+    options: ["\\(\\dfrac{1}{x^2 - 2}\\)", "\\(\\dfrac{1}{x^2 + 2}\\)", "\\(\\dfrac{1}{x^2} - 2\\)", "\\(\\dfrac{1}{x^2} - \\dfrac{1}{2}\\)"],
+    answer: 0,
+    explain: '\\(f(g(x)) = \\dfrac{1}{x^2 - 2}\\).'
+  },
+  {
+    id: 27, topic: "explicit",
+    q: 'If \\(f(x) = 3x - 1\\) and \\(g(x) = x^2 + 4\\), find the explicit form of \\(g \\circ f\\).',
+    options: ["\\(9x^2 - 6x + 5\\)", "\\(3x^2 + 11\\)", "\\(9x^2 + 6x + 5\\)", "\\(3x^2 + 12x - 1\\)"],
+    answer: 0,
+    explain: '\\(g(f(x)) = (3x-1)^2 + 4 = 9x^2 - 6x + 1 + 4 = 9x^2 - 6x + 5\\).'
+  },
+  {
+    id: 28, topic: "explicit",
+    q: 'If \\(f(x) = x + 1\\) and \\(g(x) = x - 1\\), find the explicit form of \\(f \\circ g\\).',
+    options: ["\\(x\\)", "\\(2x\\)", "\\(x^2 - 1\\)", "0"],
+    answer: 0,
+    explain: '\\(f(g(x)) = (x - 1) + 1 = x\\). This is the identity function.'
+  },
+  {
+    id: 29, topic: "explicit",
+    q: 'If \\(f(x) = \\sqrt{x + 3}\\) and \\(g(x) = x^2 - 3\\), find the explicit form of \\(f \\circ g\\) (real-valued form on its natural domain).',
+    options: ["\\(|x|\\)", "\\(x\\)", "\\(x^2\\)", "\\(\\sqrt{x^2 - 3} + 3\\)"],
+    answer: 0,
+    explain: '\\(f(g(x)) = \\sqrt{(x^2-3) + 3} = \\sqrt{x^2} = |x|\\).'
+  },
+  {
+    id: 30, topic: "explicit",
+    q: 'If \\(f(x) = \\dfrac{x - 2}{x}\\) and \\(g(x) = \\dfrac{1}{x + 1}\\), find the explicit form of \\(f \\circ g\\).',
+    options: ["\\(-2x - 1\\)", "\\(-2x + 1\\)", "\\(2x - 1\\)", "\\(-2x - 3\\)"],
+    answer: 0,
+    explain: '\\(f(g(x)) = \\dfrac{g(x) - 2}{g(x)} = 1 - \\dfrac{2}{g(x)} = 1 - 2(x + 1) = -2x - 1\\).'
+  }
+];
+
+/* ====== Render ====== */
+const TOPIC_LABEL = {
+  point: "At a point",
+  domain: "Domain",
+  derivative: "Derivative",
+  explicit: "Explicit form"
+};
+const LETTERS = ["A","B","C","D"];
+
+const state = {
+  filter: "all",
+  selected: {}, // id -> optionIndex
+  checked: false
+};
+
+const qList = document.getElementById("qList");
+
+function render() {
+  qList.innerHTML = "";
+  const visible = QUESTIONS.filter(q => state.filter === "all" || q.topic === state.filter);
+
+  visible.forEach(q => {
+    const card = document.createElement("div");
+    card.className = "q";
+    card.dataset.id = q.id;
+    card.dataset.topic = q.topic;
+
+    const head = document.createElement("div");
+    head.className = "q-head";
+    head.innerHTML = `
+      <div class="q-num">Question ${q.id} of 30</div>
+      <div class="topic">${TOPIC_LABEL[q.topic]}</div>
+    `;
+
+    const text = document.createElement("p");
+    text.className = "q-text";
+    text.innerHTML = q.q;
+
+    const opts = document.createElement("div");
+    opts.className = "opts";
+    q.options.forEach((opt, i) => {
+      const el = document.createElement("div");
+      el.className = "opt";
+      el.dataset.idx = i;
+      el.innerHTML = `<span class="letter">${LETTERS[i]}</span><span class="txt">${opt}</span>`;
+      el.addEventListener("click", () => onSelect(q.id, i));
+      opts.appendChild(el);
+    });
+
+    const explain = document.createElement("div");
+    explain.className = "explanation";
+    explain.innerHTML = `<strong>Explanation:</strong> ${q.explain}`;
+
+    card.appendChild(head);
+    card.appendChild(text);
+    card.appendChild(opts);
+    card.appendChild(explain);
+    qList.appendChild(card);
+  });
+
+  applyState();
+  updateProgress();
+  typesetMath();
+}
+
+/* Tell MathJax to typeset any new math in the question list */
+function typesetMath() {
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([qList]).catch(err => console.warn("MathJax typeset failed:", err));
+  } else {
+    // MathJax not loaded yet — retry shortly
+    setTimeout(typesetMath, 200);
+  }
+}
+
+function onSelect(qid, idx) {
+  if (state.checked) return; // lock after check
+  state.selected[qid] = idx;
+  applyState();
+  updateProgress();
+}
+
+function applyState() {
+  document.querySelectorAll(".q").forEach(card => {
+    const id = parseInt(card.dataset.id, 10);
+    const sel = state.selected[id];
+    const q = QUESTIONS.find(x => x.id === id);
+    const opts = card.querySelectorAll(".opt");
+
+    opts.forEach((el, i) => {
+      el.classList.remove("selected", "correct", "wrong", "disabled");
+      if (state.checked) {
+        el.classList.add("disabled");
+        if (i === q.answer) el.classList.add("correct");
+        if (sel === i && i !== q.answer) el.classList.add("wrong");
+      } else if (sel === i) {
+        el.classList.add("selected");
+      }
+    });
+
+    card.classList.remove("answered", "correct", "wrong");
+    if (state.checked && sel !== undefined) {
+      card.classList.add("answered");
+      card.classList.add(sel === q.answer ? "correct" : "wrong");
+    }
+
+    const ex = card.querySelector(".explanation");
+    if (state.checked) ex.classList.add("show");
+    else ex.classList.remove("show");
+  });
+}
+
+function updateProgress() {
+  const visible = QUESTIONS.filter(q => state.filter === "all" || q.topic === state.filter);
+  const total = visible.length;
+  const answered = visible.filter(q => state.selected[q.id] !== undefined).length;
+  document.getElementById("answeredCount").textContent = `${answered} / ${total}`;
+  const pct = total ? (answered / total) * 100 : 0;
+  document.getElementById("progressFill").style.width = pct + "%";
+
+  const scoreEl = document.getElementById("scoreValue");
+  if (state.checked) {
+    const correct = visible.filter(q => state.selected[q.id] === q.answer).length;
+    scoreEl.textContent = `${correct} / ${total}`;
+    const ratio = correct / total;
+    scoreEl.classList.remove("good","mid","bad");
+    scoreEl.classList.add(ratio >= 0.8 ? "good" : ratio >= 0.5 ? "mid" : "bad");
+  } else {
+    scoreEl.textContent = "—";
+    scoreEl.classList.remove("good","mid","bad");
+  }
+}
+
+/* ====== Events ====== */
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    state.filter = chip.dataset.filter;
+    render();
+  });
+});
+
+document.getElementById("checkBtn").addEventListener("click", () => {
+  const visible = QUESTIONS.filter(q => state.filter === "all" || q.topic === state.filter);
+  const answered = visible.filter(q => state.selected[q.id] !== undefined).length;
+  if (answered < visible.length) {
+    const ok = confirm(`You have answered ${answered} of ${visible.length} questions. Check answers anyway?`);
+    if (!ok) return;
+  }
+  state.checked = true;
+  applyState();
+  updateProgress();
+  document.getElementById("checkBtn").disabled = true;
+  // Re-typeset to catch newly-shown explanation math
+  typesetMath();
+  document.querySelector(".toolbar").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+function reset() {
+  state.selected = {};
+  state.checked = false;
+  document.getElementById("checkBtn").disabled = false;
+  applyState();
+  updateProgress();
+  typesetMath();
+}
+document.getElementById("resetBtn").addEventListener("click", reset);
+document.getElementById("resetBtn2").addEventListener("click", reset);
+
+/* ====== Init ====== */
+render();
+</script>
+</body>
+</html>
